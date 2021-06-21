@@ -13,12 +13,20 @@ protocol PlayerBaseCompatible {
 
 final class Player: PlayerBaseCompatible {
     var hand: [Card]?
-
+    
     func checkIfCanTossWhenAttacking(card: Card) -> Bool {
-        false
+        if let umwrapped =  hand {
+            return umwrapped.first(where: {$0.value == card.value}) != nil
+        }
+        return false
     }
-
+    
     func checkIfCanTossWhenTossing(table: [Card: Card]) -> Bool {
-        false
+        for (k, v) in table {
+            if (checkIfCanTossWhenAttacking(card: k) || (checkIfCanTossWhenAttacking(card: v))) {
+                return true
+            }
+        }
+        return false
     }
 }
